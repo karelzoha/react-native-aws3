@@ -31,10 +31,11 @@ export class RNS3 {
       key: (options.keyPrefix || '') + file.name,
       contentType: file.type
     });
-
-    let url = `https://${ options.bucket }.${options.awsUrl || 's3.amazonaws.com'}`;
-    let method = "POST";
-    let policy = S3Policy.generate(options);
+    const region = options.region ? options.region : 'us-east-1'
+    const awsUrl = options.awsUrl ? options.awsUrl : `s3.dualstack.${ region }.amazonaws.com`
+    const url = `https://${ awsUrl }/${ options.bucket }`;
+    const method = "POST";
+    const policy = S3Policy.generate(options);
 
     return Request.create(url, method, policy)
       .set("file", file)
